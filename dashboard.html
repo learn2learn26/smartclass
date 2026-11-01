@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <title>CLASSGUARD AI | Classroom Control</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#" aria-label="CLASSGUARD AI home">
+        <span class="brand-mark"><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.8 20 6v5.7c0 5.1-3.4 8.1-8 9.5-4.6-1.4-8-4.4-8-9.5V6l8-3.2Z" />
+            <path d="m8.5 12 2.2 2.2 4.8-5" />
+          </svg></span>
+        <span><strong>CLASSGUARD</strong><small>AI CLASSROOM SYSTEM</small></span>
+      </a>
+
+      <div class="nav-label">WORKSPACE</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-page="overview"><span class="nav-icon">◫</span> Overview</button>
+        <button class="nav-item" data-page="environment"><span class="nav-icon">⌁</span> Environment</button>
+        <button class="nav-item" data-page="announcements"><span class="nav-icon">◖</span> Announcements</button>
+      </nav>
+
+      <div class="nav-label second-label">SYSTEM</div>
+      <nav class="main-nav" aria-label="System navigation">
+        <button class="nav-item" data-page="security"><span class="nav-icon">⬡</span> Camera & security <span
+            class="soon">LATER</span></button>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="help-card">
+          <div class="help-icon">✦</div>
+          <strong>Classroom intelligence</strong>
+          <p>Monitor your classroom environment from one place.</p>
+        </div>
+        <div class="profile">
+          <div class="avatar" id="teacherAvatar">T</div>
+
+          <div class="profile-info">
+            <strong>Teacher account</strong>
+            <small id="teacherEmail">Loading...</small>
+          </div>
+
+          <button class="logout-button" id="logoutButton" title="Sign out" aria-label="Sign out">
+            ↪
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Toggle menu">☰</button>
+        <div class="breadcrumbs"><span>Workspace</span><b>/</b><strong id="breadcrumbTitle">Overview</strong></div>
+        <div class="top-actions">
+          <div class="connection-pill"><span class="status-dot"></span> Not connected</div>
+          <button class="notification-button" id="enableNotificationsButton" type="button">
+            Enable notifications
+          </button>
+          <div class="top-avatar">T</div>
+        </div>
+      </header>
+
+      <section class="page-content">
+        <div class="welcome-row">
+          <div>
+            <div class="eyebrow">CLASSROOM CONTROL CENTER</div>
+            <h1 id="pageTitle">Classroom overview</h1>
+            <p class="page-subtitle" id="pageSubtitle">A clear view of your classroom environment and system health.</p>
+          </div>
+          <div class="date-chip"><span>◷</span><span id="currentDate">Loading date…</span></div>
+        </div>
+
+        <div id="overviewPage">
+
+          <!-- System Status -->
+          <section class="panel status-panel">
+            <div class="panel-header">
+              <div>
+                <h2>System Status</h2>
+                <p>CLASSGUARD AI monitoring system</p>
+              </div>
+              <span class="metric-state offline" id="controllerState">
+                Checking...
+              </span>
+            </div>
+
+            <div class="status-row">
+              <span class="status-row-icon">▦</span>
+              <span>
+                <strong>ESP32-S3 Controller</strong>
+                <small>Main monitoring unit</small>
+              </span>
+              <b class="status-text muted" id="controllerSystemStatus">
+                Checking...
+              </b>
+            </div>
+
+            <div class="status-row">
+              <span class="status-row-icon cloud">☁</span>
+              <span>
+                <strong>Firebase Connection</strong>
+                <small>Cloud database</small>
+              </span>
+              <b class="status-text muted" id="firebaseSystemStatus">
+                Connecting...
+              </b>
+            </div>
+          </section>
+
+          <!-- Class -->
+          <section class="panel class-panel">
+            <div class="panel-header">
+              <div>
+                <h2>Class</h2>
+                <p>Monitored classroom</p>
+              </div>
+            </div>
+            <div class="class-name">Class 10</div>
+          </section>
+
+          <!-- Live Environment -->
+          <div class="section-heading">
+            <div>
+              <h2>Classroom Environment</h2>
+              <p>Latest readings from classroom sensors</p>
+            </div>
+            <span class="live-label" id="liveDataLabel">
+              <span></span> CONNECTING...
+            </span>
+          </div>
+
+          <div class="metrics-grid">
+
+            <!-- Temperature -->
+            <article class="metric-card">
+              <div class="metric-top">
+                <div class="metric-icon temp">♨</div>
+                <span class="metric-state neutral" id="temperatureState">
+                  Waiting
+                </span>
+              </div>
+              <div class="metric-label">Temperature</div>
+              <div class="metric-value" id="temperatureValue">
+                -- <small>°C</small>
+              </div>
+            </article>
+
+            <!-- Humidity -->
+            <article class="metric-card">
+              <div class="metric-top">
+                <div class="metric-icon humidity">◌</div>
+                <span class="metric-state neutral" id="humidityState">
+                  Waiting
+                </span>
+              </div>
+              <div class="metric-label">Humidity</div>
+              <div class="metric-value" id="humidityValue">
+                -- <small>%</small>
+              </div>
+            </article>
+
+            <!-- Air Quality -->
+            <article class="metric-card">
+              <div class="metric-top">
+                <div class="metric-icon air">⌁</div>
+                <span class="metric-state neutral" id="airQualityState">
+                  Waiting
+                </span>
+              </div>
+              <div class="metric-label">Air Quality</div>
+              <div class="metric-value" id="airQualityValue">
+                -- <small>raw</small>
+              </div>
+              <div class="metric-foot">
+                <span>MQ135 sensor reading</span>
+              </div>
+            </article>
+
+          </div>
+
+          <!-- Last Updated -->
+          <section class="panel last-updated-panel">
+            <div class="last-updated-icon">◷</div>
+            <div>
+              <strong>Last Updated</strong>
+              <p id="lastCommunication">Waiting for sensor data...</p>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ENVIRONMENT PAGE -->
+        <div id="environmentPage" hidden>
+          <div class="section-heading environment-heading">
+            <div>
+              <h2>Environment trends</h2>
+              <p>Live sensor readings from the classroom</p>
+            </div>
+            <span class="live-label" id="environmentLiveLabel">
+              <span></span> WAITING FOR DATA
+            </span>
+          </div>
+
+          <div class="environment-charts">
+            <section class="panel chart-card">
+              <div class="chart-card-header">
+                <div>
+                  <h3>Temperature</h3>
+                  <p>Classroom temperature</p>
+                </div>
+                <strong class="chart-current-value" id="temperatureChartValue">-- °C</strong>
+              </div>
+              <canvas id="temperatureChart" class="sensor-chart" aria-label="Temperature trend chart"></canvas>
+            </section>
+
+            <section class="panel chart-card">
+              <div class="chart-card-header">
+                <div>
+                  <h3>Humidity</h3>
+                  <p>Relative humidity</p>
+                </div>
+                <strong class="chart-current-value" id="humidityChartValue">-- %</strong>
+              </div>
+              <canvas id="humidityChart" class="sensor-chart" aria-label="Humidity trend chart"></canvas>
+            </section>
+
+            <section class="panel chart-card">
+              <div class="chart-card-header">
+                <div>
+                  <h3>Air quality</h3>
+                  <p>MQ135 raw sensor reading</p>
+                </div>
+                <strong class="chart-current-value" id="airQualityChartValue">-- raw</strong>
+              </div>
+              <canvas id="airQualityChart" class="sensor-chart" aria-label="Air quality trend chart"></canvas>
+            </section>
+          </div>
+        </div>
+
+
+
+        <!-- ANNOUNCEMENTS PAGE -->
+        <div id="announcementsPage" hidden>
+
+          <div class="announcement-layout">
+
+            <!-- Announcement Composer -->
+            <section class="panel announcement-composer">
+
+              <div class="panel-header">
+                <div>
+                  <h2>Create announcement</h2>
+                  <p>Send a voice message to the classroom speaker</p>
+                </div>
+                <span class="lock-label">TEACHER CONTROL</span>
+              </div>
+
+              <label for="announcementMessage">Your message</label>
+
+              <textarea id="announcementMessage" maxlength="250" rows="5"
+                placeholder="Type your announcement here..."></textarea>
+
+              <div class="announcement-meta">
+                <span>Maximum 250 characters</span>
+                <span id="announcementCharCount">0 / 250</span>
+              </div>
+
+              <div class="announcement-presets">
+                <h3>Quick messages</h3>
+
+                <div class="preset-list">
+                  <button type="button" class="preset-button" data-preset="Please maintain silence in the classroom.">
+                    Maintain silence
+                  </button>
+
+                  <button type="button" class="preset-button" data-preset="Please keep the classroom clean and tidy.">
+                    Keep classroom clean
+                  </button>
+
+                  <button type="button" class="preset-button"
+                    data-preset="Please open the windows and improve classroom ventilation.">
+                    Improve ventilation
+                  </button>
+
+                  <button type="button" class="preset-button"
+                    data-preset="The class will begin shortly. Please get ready.">
+                    Class starting
+                  </button>
+                </div>
+              </div>
+
+              <div class="announcement-options">
+                <label for="announcementPriority">Priority</label>
+
+                <select id="announcementPriority">
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+              </div>
+
+              <button type="button" id="previewAnnouncementButton">
+                Preview announcement
+              </button>
+
+              <button type="button" id="sendAnnouncementButton">
+                Send announcement →
+              </button>
+
+              <button type="button" id="testRTDBButton">
+                Test RTDB Write
+              </button>
+
+              <p class="announcement-note">
+                The message will be played through the classroom speaker
+                when device integration is enabled.
+              </p>
+
+            </section>
+
+            <!-- Announcement Preview -->
+            <section class="panel announcement-preview">
+
+              <div class="panel-header">
+                <div>
+                  <h2>Message preview</h2>
+                  <p>Review before sending</p>
+                </div>
+                <span class="lock-label">PREVIEW</span>
+              </div>
+
+              <div class="speaker-preview">
+                <div class="speaker-preview-icon">🔊</div>
+
+                <strong>CLASSGUARD AI</strong>
+
+                <p id="announcementPreviewText">
+                  Your announcement will appear here.
+                </p>
+
+                <span id="announcementPreviewPriority">
+                  NORMAL PRIORITY
+                </span>
+              </div>
+
+              <div class="preview-info">
+                <span>Destination</span>
+                <strong>Classroom speaker</strong>
+              </div>
+
+              <div class="preview-info">
+                <span>Controller</span>
+                <strong>ESP32-S3</strong>
+              </div>
+
+            </section>
+
+          </div>
+
+        </div>
+        <!-- END ANNOUNCEMENTS PAGE -->
+
+
+        <footer class="footer"><span>© 2026 CLASSGUARD AI</span><span>Developed by : Ameen Najeeb</span></footer>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <script type="module" src="app.js"></script>
+</body>
+
+</html>
