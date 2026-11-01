@@ -1,3 +1,4 @@
+
 importScripts(
   "https://www.gstatic.com/firebasejs/12.4.0/firebase-app-compat.js"
 );
@@ -8,8 +9,7 @@ importScripts(
 firebase.initializeApp({
   apiKey: "AIzaSyBZkA1XNV7kdex8SSvla1_OzJkxmdFskzw",
   authDomain: "classguard-ai.firebaseapp.com",
-  databaseURL:
-    "https://classguard-ai-default-rtdb.asia-southeast1.firebasedatabase.app",
+  databaseURL: "https://classguard-ai-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "classguard-ai",
   storageBucket: "classguard-ai.firebasestorage.app",
   messagingSenderId: "1010628513262",
@@ -18,12 +18,27 @@ firebase.initializeApp({
 
 const messaging = firebase.messaging();
 
-messaging.onBackgroundMessage(payload => {
-  const title = payload.notification?.title || "CLASSGUARD AI";
-  const options = {
-    body: payload.notification?.body || "New classroom alert.",
-    data: payload.data || {}
-  };
+messaging.onBackgroundMessage((payload) => {
+  const notification = payload.notification || {};
 
-  self.registration.showNotification(title, options);
+  self.registration.showNotification(
+    notification.title || "CLASSGUARD AI",
+    {
+      body: notification.body || "New classroom alert.",
+      icon: "./icon.png",
+      data: payload.data || {}
+    }
+  );
 });
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+
+  event.waitUntil(
+    clients.openWindow("./index.html")
+  );
+});
+
+
+
+
