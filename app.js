@@ -102,43 +102,75 @@ function showToast(message) {
   }, 2600);
 }
 
+
 async function registerForNotifications() {
-  if (!("Notification" in window) || !("serviceWorker" in navigator)) {
+  if (
+    !("Notification" in window) ||
+    !("serviceWorker" in navigator)
+  ) {
     throw new Error(
       "This browser does not support web notifications."
     );
   }
 
-  const permission = await Notification.requestPermission();
+  // Check notification permission
+  let permission = Notification.permission;
 
-  if (permission !== "granted") {
-    throw new Error("Notification permission was not granted.");
+  if (permission === "default") {
+    permission = await Notification.requestPermission();
   }
 
+  if (permission === "denied") {
+    throw new Error(
+      "Notifications are blocked. Allow them in Chrome Site Settings."
+    );
+  }
+
+  if (permission !== "granted") {
+    throw new Error(
+      "Notification permission was not granted."
+    );
+  }
+
+  // Register service worker
   const registration = await navigator.serviceWorker.register(
     "./firebase-messaging-sw.js"
   );
+
+  await navigator.serviceWorker.ready;
+
+  // Generate FCM token
   const messaging = getMessaging();
+
   const token = await getToken(messaging, {
     vapidKey: FCM_VAPID_KEY,
     serviceWorkerRegistration: registration
   });
 
   if (!token) {
-    throw new Error("Firebase did not return an FCM registration token.");
+    throw new Error(
+      "Firebase did not return an FCM registration token."
+    );
   }
 
-  const tokenRecord = push(ref(rtdb, "fcm_tokens"));
+  // Save ONE token, replacing the previous token
+  const tokenRecord = ref(
+    rtdb,
+    "fcm_tokens/classguard_s3_01"
+  );
 
   await set(tokenRecord, {
-    token,
+    token: token,
     platform: "web",
     user_agent: navigator.userAgent,
     updated_at: serverTimestamp()
   });
 
+  console.log("FCM token saved successfully.");
+
   return token;
 }
+
 
 if (enableNotificationsButton) {
   enableNotificationsButton.addEventListener("click", async () => {
