@@ -26,6 +26,7 @@ messaging.onBackgroundMessage((payload) => {
     {
       body: notification.body || "New classroom alert.",
       icon: "./icon.png",
+      url: "https://learn2learn26.github.io/smartclass"
       data: payload.data || {}
     }
   );
