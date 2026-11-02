@@ -958,10 +958,9 @@ if (previewAnnouncementButton) {
 // SEND ANNOUNCEMENT TO RTDB
 // =====================================
 
-// WARNING:
-// This stores announcements in RTDB /commands.
-// Your Node.js server and ESP32 must also be
-// migrated to read commands from RTDB.
+// IMPORTANT:
+// This stores exactly ONE active command at /commands.
+// Each new announcement overwrites the previous one.
 
 if (sendAnnouncementButton) {
   sendAnnouncementButton.addEventListener(
@@ -994,15 +993,12 @@ if (sendAnnouncementButton) {
           timestamp: serverTimestamp()
         };
 
-        const commandReference = push(
-          ref(rtdb, "commands")
-        );
+        const commandReference = ref(rtdb, "commands");
 
         await set(commandReference, announcementData);
 
         console.log(
-          "Announcement uploaded to RTDB:",
-          commandReference.key
+          "Announcement uploaded to RTDB at /commands"
         );
 
         showToast("Announcement uploaded successfully!");
