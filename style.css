@@ -485,6 +485,11 @@ button {
     color: #3ab7a4
 }
 
+.motion {
+    background: #f3efff;
+    color: #8a6fd1
+}
+
 .metric-state {
     font-size: 9px;
     padding: 5px 7px;
@@ -1262,7 +1267,7 @@ body {
 /* Sensor cards */
 .metrics-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
     margin: 16px 0 22px;
 }

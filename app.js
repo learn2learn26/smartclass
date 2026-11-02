@@ -308,6 +308,9 @@ const humidityValue =
 const airQualityValue =
   document.getElementById("airQualityValue");
 
+const motionValue =
+  document.getElementById("motionValue");
+
 const temperatureState =
   document.getElementById("temperatureState");
 
@@ -316,6 +319,9 @@ const humidityState =
 
 const airQualityState =
   document.getElementById("airQualityState");
+
+const motionState =
+  document.getElementById("motionState");
 
 const controllerState =
   document.getElementById("controllerState");
@@ -629,10 +635,15 @@ function showNoSensorData() {
   updateMetric(humidityValue, null, "%");
   updateMetric(airQualityValue, null, "raw");
 
+  if (motionValue) {
+    motionValue.innerHTML = `-- <small>status</small>`;
+  }
+
   [
     temperatureState,
     humidityState,
-    airQualityState
+    airQualityState,
+    motionState
   ].forEach(element => {
     if (element) {
       element.textContent = "Unavailable";
@@ -688,6 +699,26 @@ function renderSensorReading(data) {
     data.airQualityRaw,
     "raw"
   );
+
+  if (motionValue) {
+    if (typeof data.motionDetected === "boolean") {
+      motionValue.innerHTML =
+        `${data.motionDetected ? "Detected" : "Clear"} <small>status</small>`;
+    } else {
+      motionValue.innerHTML = `-- <small>status</small>`;
+    }
+  }
+
+  if (motionState) {
+    if (typeof data.motionDetected === "boolean") {
+      motionState.textContent =
+        data.motionDetected ? "Detected" : "Clear";
+      motionState.className = "metric-state neutral";
+    } else {
+      motionState.textContent = "Unavailable";
+      motionState.className = "metric-state neutral";
+    }
+  }
 
   // Temperature status
   const temperature = Number(data.temperature);
